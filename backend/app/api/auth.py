@@ -43,8 +43,9 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
 @router.get("/login")
 async def login():
-    # This would normally redirect to Google OAuth
-    return {"message": "Google OAuth Login Placeholder. Redirect to Google."}
+    """Development login endpoint that returns a test token."""
+    access_token = create_access_token(data={"sub": "devuser@example.com"})
+    return {"access_token": access_token, "token_type": "bearer"}
 
 @router.get("/callback")
 async def callback(code: str):

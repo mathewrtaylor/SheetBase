@@ -1,10 +1,29 @@
 import os
 import duckdb
 from fastapi import APIRouter, HTTPException, Depends
+from fastapi.responses import StreamingResponse
 from typing import List, Dict, Any
 from .auth import get_current_user
+from ..services.pdf_service import PDFService
 
 router = APIRouter()
+pdf_service = PDFService()
+
+# ... (existing get_db_connection function)
+
+@router.get("/{table_name}/report")
+async def generate_table_report(table_name: str, current_user: str = Depends(get_current_user)):
+    """Generate and download a PDF report for the specified table."""
+    try:
+        pdf_io = pdf_service.generate_report(table_name)
+        return StreamingResponse(
+            pdf_io,
+            media_type="application/pdf",
+            headers={"Content-Disposition": f"attachment; filename={table_name}_report.pdf"}
+        )
+    except Exception as e:
+        print(f"Error generating report: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 def get_db_connection():
     db_path = os.getenv('DB_PATH', 'data/sheetbase.db')
