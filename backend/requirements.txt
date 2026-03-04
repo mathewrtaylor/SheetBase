@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+duckdb
+google-api-python-client
+google-auth-oauthlib
+pandas
+python-multipart
+python-jose[cryptography]
+passlib[bcrypt]
+matplotlib
+weasyprint
+python-dotenv
+jinja2
